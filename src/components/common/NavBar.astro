@@ -1,0 +1,219 @@
+---
+const menuItems = [
+  {
+    name: 'ストーリー攻略',
+    href: '/story',
+    children: [
+      { name: '序章', href: '/story/prologue' },
+      { name: '第1章', href: '/story/chapter-1' },
+      { name: '第2章', href: '/story/chapter-2' },
+      { name: '第3章', href: '/story/chapter-3' },
+    ],
+  },
+  {
+    name: 'ライフ',
+    href: '/lives',
+    children: [
+      { name: '戦闘系', href: '/lives/combat' },
+      { name: '採取系', href: '/lives/gathering' },
+      { name: '製作系', href: '/lives/crafting' },
+    ],
+  },
+  {
+    name: 'データベース',
+    href: '/database',
+    children: [
+      { name: 'アイテム', href: '/database/items' },
+      { name: '装備', href: '/database/equipment' },
+      { name: 'モンスター', href: '/database/monsters' },
+      { name: 'たまげもの', href: '/database/tamagemono' },
+      { name: 'レシピ', href: '/database/recipes' },
+    ],
+  },
+  {
+    name: 'マップ',
+    href: '/maps',
+  },
+  {
+    name: 'コミュニティ',
+    href: '/community',
+    children: [
+      { name: 'フォーラム', href: '/community' },
+      { name: 'YouTube動画', href: '/community/youtube' },
+      { name: 'Discord', href: 'https://discord.gg/fantasylife' },
+    ],
+  },
+];
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md backdrop-blur-custom">
+  <div class="container-content">
+    <div class="flex items-center justify-between h-16">
+      <!-- ロゴ -->
+      <a href="/" class="flex items-center space-x-2">
+        <img src="/images/logo.svg" alt="ファンタジーライフi" class="h-8 w-auto" />
+        <span class="font-display font-bold text-xl hidden sm:inline">
+          ファンタジーライフi攻略
+        </span>
+        <span class="font-display font-bold text-xl sm:hidden">
+          FL攻略
+        </span>
+      </a>
+
+      <!-- デスクトップメニュー -->
+      <div class="hidden lg:flex items-center space-x-6">
+        {menuItems.map((item) => (
+          <div class="relative group">
+            <a
+              href={item.href}
+              class="flex items-center space-x-1 text-gray-700 hover:text-primary-600 transition-colors py-2"
+            >
+              <span>{item.name}</span>
+              {item.children && (
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              )}
+            </a>
+            
+            {item.children && (
+              <div class="absolute top-full left-0 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 mt-2">
+                <div class="py-2">
+                  {item.children.map((child) => (
+                    <a
+                      href={child.href}
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                    >
+                      {child.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        
+        <!-- 検索ボタン -->
+        <button
+          type="button"
+          class="p-2 text-gray-700 hover:text-primary-600 transition-colors"
+          aria-label="検索"
+          id="search-toggle"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+        
+        <!-- ダークモードトグル -->
+        <button
+          type="button"
+          class="p-2 text-gray-700 hover:text-primary-600 transition-colors"
+          aria-label="ダークモード切り替え"
+          id="theme-toggle"
+        >
+          <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- モバイルメニューボタン -->
+      <button
+        type="button"
+        class="lg:hidden p-2 text-gray-700 hover:text-primary-600 transition-colors"
+        aria-label="メニュー"
+        id="mobile-menu-toggle"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- モバイルメニュー -->
+  <div
+    id="mobile-menu"
+    class="lg:hidden fixed inset-0 top-16 bg-white transform translate-x-full transition-transform duration-300 overflow-y-auto"
+  >
+    <div class="p-4 space-y-4">
+      {menuItems.map((item) => (
+        <div>
+          <a
+            href={item.href}
+            class="block text-lg font-medium text-gray-900 hover:text-primary-600 transition-colors py-2"
+          >
+            {item.name}
+          </a>
+          {item.children && (
+            <div class="ml-4 mt-2 space-y-2">
+              {item.children.map((child) => (
+                <a
+                  href={child.href}
+                  class="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                >
+                  {child.name}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+      
+      <div class="border-t pt-4 flex items-center space-x-4">
+        <button
+          type="button"
+          class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 transition-colors"
+          id="mobile-search-toggle"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <span>検索</span>
+        </button>
+        
+        <button
+          type="button"
+          class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 transition-colors"
+          id="mobile-theme-toggle"
+        >
+          <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <span class="dark:hidden">ダークモード</span>
+          <span class="hidden dark:block">ライトモード</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // モバイルメニューの開閉
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  mobileMenuToggle?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('translate-x-full');
+  });
+
+  // ダークモードの切り替え
+  const themeToggle = document.getElementById('theme-toggle');
+  const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+  
+  const toggleTheme = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  };
+  
+  themeToggle?.addEventListener('click', toggleTheme);
+  mobileThemeToggle?.addEventListener('click', toggleTheme);
+</script>

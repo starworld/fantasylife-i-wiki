@@ -1,0 +1,189 @@
+---
+---
+
+<div id="search-modal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+  <div class="flex items-start justify-center min-h-screen pt-20 px-4">
+    <!-- 背景オーバーレイ -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" id="search-backdrop"></div>
+    
+    <!-- モーダルコンテンツ -->
+    <div class="relative bg-white dark:bg-background-dark rounded-lg shadow-xl max-w-2xl w-full">
+      <div class="p-6">
+        <!-- 検索入力 -->
+        <div class="flex items-center space-x-4 mb-4">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="search"
+            id="search-input"
+            placeholder="検索キーワードを入力..."
+            class="flex-1 text-lg bg-transparent border-none focus:outline-none"
+            autocomplete="off"
+          />
+          <button
+            id="search-close"
+            class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <!-- 検索結果 -->
+        <div id="search-results" class="space-y-2 max-h-96 overflow-y-auto">
+          <!-- 検索結果がここに表示されます -->
+        </div>
+        
+        <!-- 検索のヒント -->
+        <div id="search-hints" class="text-sm text-text-secondary dark:text-text-secondary-dark">
+          <p>検索のヒント:</p>
+          <ul class="list-disc list-inside mt-2 space-y-1">
+            <li>キーワードを入力して攻略情報を検索</li>
+            <li>「最強装備」「初心者」などで検索してみてください</li>
+            <li>ESCキーで検索を閉じます</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 検索モーダルの制御
+  const searchModal = document.getElementById('search-modal');
+  const searchBackdrop = document.getElementById('search-backdrop');
+  const searchClose = document.getElementById('search-close');
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const searchResults = document.getElementById('search-results');
+  const searchHints = document.getElementById('search-hints');
+  
+  // 検索トリガーボタン
+  const searchTriggers = document.querySelectorAll('#search-toggle, #mobile-search-toggle');
+  
+  // モーダルを開く
+  const openSearch = () => {
+    searchModal?.classList.remove('hidden');
+    searchInput?.focus();
+  };
+  
+  // モーダルを閉じる
+  const closeSearch = () => {
+    searchModal?.classList.add('hidden');
+    if (searchInput) searchInput.value = '';
+    if (searchResults) searchResults.innerHTML = '';
+    searchHints?.classList.remove('hidden');
+  };
+  
+  // イベントリスナー
+  searchTriggers.forEach(trigger => {
+    trigger.addEventListener('click', openSearch);
+  });
+  
+  searchClose?.addEventListener('click', closeSearch);
+  searchBackdrop?.addEventListener('click', closeSearch);
+  
+  // ESCキーで閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !searchModal?.classList.contains('hidden')) {
+      closeSearch();
+    }
+  });
+  
+  // Ctrl+K or Cmd+K でオープン
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+  
+  // Pagefind検索の実装
+  let pagefind: any;
+  
+  searchInput?.addEventListener('input', async (e) => {
+    const query = (e.target as HTMLInputElement).value;
+    
+    if (query.length < 2) {
+      if (searchResults) searchResults.innerHTML = '';
+      searchHints?.classList.remove('hidden');
+      return;
+    }
+    
+    searchHints?.classList.add('hidden');
+    
+    // Pagefindの初期化
+    if (!pagefind) {
+      // 開発環境では検索機能を無効化
+      if (import.meta.env.DEV) {
+        if (searchResults) {
+          searchResults.innerHTML = `
+            <div class="p-4 text-center text-text-secondary dark:text-text-secondary-dark">
+              検索機能は本番環境でのみ利用可能です
+            </div>
+          `;
+        }
+        return;
+      }
+      
+      try {
+        // @ts-ignore
+        pagefind = await import(/* @vite-ignore */ '/pagefind/pagefind.js');
+      } catch (error) {
+        console.error('Pagefind not available:', error);
+        if (searchResults) {
+          searchResults.innerHTML = `
+            <div class="p-4 text-center text-text-secondary dark:text-text-secondary-dark">
+              検索機能は現在利用できません
+            </div>
+          `;
+        }
+        return;
+      }
+    }
+    
+    // 検索実行
+    try {
+      const search = await pagefind.debouncedSearch(query);
+      
+      if (!search || search.results.length === 0) {
+        if (searchResults) {
+          searchResults.innerHTML = `
+            <div class="p-4 text-center text-text-secondary dark:text-text-secondary-dark">
+              「${query}」に一致する結果が見つかりませんでした
+            </div>
+          `;
+        }
+        return;
+      }
+      
+      // 結果の表示
+      const resultsHTML = await Promise.all(
+        search.results.slice(0, 10).map(async (result: any) => {
+          const data = await result.data();
+          return `
+            <a href="${data.url}" class="block p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+              <h4 class="font-medium text-primary-600 dark:text-primary-400">${data.meta.title || 'No title'}</h4>
+              <p class="text-sm text-text-secondary dark:text-text-secondary-dark mt-1 line-clamp-2">
+                ${data.excerpt || ''}
+              </p>
+            </a>
+          `;
+        })
+      );
+      
+      if (searchResults) {
+        searchResults.innerHTML = resultsHTML.join('');
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+    }
+  });
+</script>
+
+<style>
+  #search-modal {
+    backdrop-filter: blur(4px);
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+import ImagePlaceholder from '@/components/ImagePlaceholder.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  href: string;
+  image?: string;
+  category?: string;
+  date?: Date;
+  featured?: boolean;
+  views?: number;
+}
+
+const {
+  title,
+  description,
+  href,
+  image,
+  category,
+  date,
+  featured = false,
+  views,
+} = Astro.props;
+
+const formattedDate = date ? new Intl.DateTimeFormat('ja-JP', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(date) : null;
+---
+
+<article class={`card group ${featured ? 'border-2 border-primary-500' : ''}`}>
+  <a href={href} class="block">
+    <div class="aspect-thumbnail relative mb-4 overflow-hidden rounded-lg">
+      {image ? (
+        <img
+          src={image}
+          alt={title}
+          loading="lazy"
+          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      ) : (
+        <ImagePlaceholder
+          width={400}
+          height={225}
+          type="thumbnail"
+          text="記事画像"
+          className="w-full h-full object-cover"
+        />
+      )}
+      {featured && (
+        <span class="absolute top-2 left-2 px-2 py-1 bg-primary-600 text-white text-xs font-medium rounded">
+          注目
+        </span>
+      )}
+    </div>
+    
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        {category && (
+          <span class="tag-primary">
+            {category}
+          </span>
+        )}
+        {views && (
+          <span class="text-xs text-text-secondary dark:text-text-secondary-dark">
+            👁 {views.toLocaleString()}
+          </span>
+        )}
+      </div>
+      
+      <h3 class="font-bold text-lg line-clamp-2 group-hover:text-primary-600 transition-colors">
+        {title}
+      </h3>
+      
+      <p class="text-sm text-text-secondary dark:text-text-secondary-dark line-clamp-3">
+        {description}
+      </p>
+      
+      {formattedDate && (
+        <time
+          datetime={date.toISOString()}
+          class="text-xs text-text-secondary dark:text-text-secondary-dark"
+        >
+          {formattedDate}
+        </time>
+      )}
+    </div>
+  </a>
+</article>

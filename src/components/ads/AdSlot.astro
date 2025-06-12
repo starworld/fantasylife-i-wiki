@@ -1,0 +1,119 @@
+---
+export interface Props {
+  slot: string;
+  format?: 'auto' | 'fluid' | 'rectangle' | 'vertical' | 'horizontal';
+  responsive?: boolean;
+  class?: string;
+}
+
+const {
+  slot,
+  format = 'auto',
+  responsive = true,
+  class: className = ''
+} = Astro.props;
+
+const clientId = import.meta.env.PUBLIC_ADSENSE_CLIENT_ID;
+const isProduction = import.meta.env.PROD;
+---
+
+{isProduction && clientId ? (
+  <div class={`ad-container ${className}`} data-ad-slot={slot}>
+    <ins
+      class="adsbygoogle"
+      style="display:block"
+      data-ad-client={clientId}
+      data-ad-slot={slot}
+      data-ad-format={format}
+      data-full-width-responsive={responsive}
+    ></ins>
+  </div>
+) : (
+  <div class={`ad-placeholder ${className}`}>
+    <div class="ad-placeholder-content">
+      <span class="text-gray-500 text-sm">広告スペース</span>
+      <span class="text-xs text-gray-400">Slot: {slot}</span>
+    </div>
+  </div>
+)}
+
+<script>
+  // AdSenseの遅延読み込み
+  if (typeof window !== 'undefined' && import.meta.env.PROD) {
+    const loadAdSense = () => {
+      // AdSenseスクリプトが既に読み込まれているかチェック
+      if (!document.querySelector('script[src*="pagead2.googlesyndication.com"]')) {
+        const script = document.createElement('script');
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + 
+                     import.meta.env.PUBLIC_ADSENSE_CLIENT_ID;
+        document.head.appendChild(script);
+      }
+      
+      // 広告を初期化
+      const ads = document.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])');
+      ads.forEach(() => {
+        try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (err) {
+          console.error('AdSense error:', err);
+        }
+      });
+    };
+
+    // Intersection Observerで広告が表示領域に入ったら読み込む
+    if ('IntersectionObserver' in window) {
+      const adObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            loadAdSense();
+            adObserver.disconnect();
+          }
+        });
+      }, {
+        rootMargin: '100px'
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const adContainers = document.querySelectorAll('.ad-container');
+        adContainers.forEach(container => adObserver.observe(container));
+      });
+    } else {
+      // Intersection Observerがサポートされていない場合は即座に読み込む
+      document.addEventListener('DOMContentLoaded', loadAdSense);
+    }
+  }
+</script>
+
+<style>
+  .ad-container,
+  .ad-placeholder {
+    @apply flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden;
+    min-height: 250px;
+  }
+
+  .ad-placeholder-content {
+    @apply flex flex-col items-center justify-center space-y-1;
+  }
+
+  /* レスポンシブ広告サイズ */
+  @media (max-width: 640px) {
+    .ad-container,
+    .ad-placeholder {
+      min-height: 100px;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .ad-container,
+    .ad-placeholder {
+      min-height: 200px;
+    }
+  }
+
+  /* 広告の読み込み中表示 */
+  .ad-container:not([data-ad-status="filled"]) {
+    @apply animate-pulse;
+  }
+</style>

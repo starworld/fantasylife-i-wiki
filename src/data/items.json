@@ -1,0 +1,219 @@
+{
+  "items": [
+    {
+      "id": "potion_small",
+      "name": "ちいさなポーション",
+      "category": "回復",
+      "type": "消耗品",
+      "rarity": "common",
+      "description": "HPを50回復する基本的な回復薬",
+      "effect": {
+        "hp_recovery": 50
+      },
+      "acquisition": [
+        {
+          "method": "ショップ購入",
+          "location": "各街の道具屋",
+          "price": 100
+        },
+        {
+          "method": "ドロップ",
+          "source": "スライム系モンスター",
+          "rate": "30%"
+        }
+      ],
+      "stack_limit": 99,
+      "sell_price": 50
+    },
+    {
+      "id": "potion_medium",
+      "name": "ポーション",
+      "category": "回復",
+      "type": "消耗品",
+      "rarity": "uncommon",
+      "description": "HPを150回復する標準的な回復薬",
+      "effect": {
+        "hp_recovery": 150
+      },
+      "acquisition": [
+        {
+          "method": "ショップ購入",
+          "location": "中級街の道具屋",
+          "price": 300
+        },
+        {
+          "method": "製作",
+          "life": "錬金術師",
+          "level": 5,
+          "materials": [
+            {
+              "item_id": "herb_green",
+              "quantity": 2
+            },
+            {
+              "item_id": "water_pure",
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "stack_limit": 99,
+      "sell_price": 150
+    },
+    {
+      "id": "wood_normal",
+      "name": "ふつうの木材",
+      "category": "素材",
+      "type": "木材",
+      "rarity": "common",
+      "description": "どこにでもある普通の木材。様々な製作に使用",
+      "acquisition": [
+        {
+          "method": "採取",
+          "life": "木こり",
+          "location": "始まりの森",
+          "tool": "斧",
+          "level": 1
+        }
+      ],
+      "stack_limit": 999,
+      "sell_price": 10
+    },
+    {
+      "id": "ore_iron",
+      "name": "鉄鉱石",
+      "category": "素材",
+      "type": "鉱石",
+      "rarity": "common",
+      "description": "鉄を含む鉱石。鍛冶の基本素材",
+      "acquisition": [
+        {
+          "method": "採掘",
+          "life": "採掘師",
+          "location": "鉄鉱山",
+          "tool": "つるはし",
+          "level": 5
+        }
+      ],
+      "stack_limit": 999,
+      "sell_price": 25
+    },
+    {
+      "id": "herb_green",
+      "name": "みどりの薬草",
+      "category": "素材",
+      "type": "植物",
+      "rarity": "common",
+      "description": "回復薬の材料になる薬草",
+      "acquisition": [
+        {
+          "method": "採取",
+          "location": "平原エリア全般",
+          "tool": "素手"
+        },
+        {
+          "method": "栽培",
+          "life": "農家",
+          "level": 3
+        }
+      ],
+      "stack_limit": 999,
+      "sell_price": 15
+    },
+    {
+      "id": "fish_small",
+      "name": "小魚",
+      "category": "食材",
+      "type": "魚",
+      "rarity": "common",
+      "description": "よく釣れる小さな魚",
+      "acquisition": [
+        {
+          "method": "釣り",
+          "life": "釣り人",
+          "location": "川・湖",
+          "bait": "ミミズ",
+          "level": 1
+        }
+      ],
+      "stack_limit": 999,
+      "sell_price": 20
+    },
+    {
+      "id": "crystal_rainbow",
+      "name": "虹色のクリスタル",
+      "category": "素材",
+      "type": "宝石",
+      "rarity": "legendary",
+      "description": "七色に輝く希少なクリスタル。最高級装備の材料",
+      "acquisition": [
+        {
+          "method": "ボスドロップ",
+          "source": "虹竜",
+          "rate": "5%"
+        },
+        {
+          "method": "宝箱",
+          "location": "虹の洞窟・最深部",
+          "rate": "レア宝箱確定"
+        }
+      ],
+      "stack_limit": 99,
+      "sell_price": 10000
+    }
+  ],
+  "categories": [
+    {
+      "id": "回復",
+      "icon": "💊",
+      "description": "HP/SPを回復するアイテム"
+    },
+    {
+      "id": "素材",
+      "icon": "🧱",
+      "description": "製作に使用する基本素材"
+    },
+    {
+      "id": "食材",
+      "icon": "🍖",
+      "description": "料理に使用する食材"
+    },
+    {
+      "id": "装備強化",
+      "icon": "💎",
+      "description": "装備を強化する素材"
+    },
+    {
+      "id": "特殊",
+      "icon": "⭐",
+      "description": "特殊な効果を持つアイテム"
+    }
+  ],
+  "rarities": {
+    "common": {
+      "name": "コモン",
+      "color": "#808080",
+      "drop_rate_modifier": 1
+    },
+    "uncommon": {
+      "name": "アンコモン",
+      "color": "#40C040",
+      "drop_rate_modifier": 0.5
+    },
+    "rare": {
+      "name": "レア",
+      "color": "#4080FF",
+      "drop_rate_modifier": 0.2
+    },
+    "epic": {
+      "name": "エピック",
+      "color": "#B040FF",
+      "drop_rate_modifier": 0.05
+    },
+    "legendary": {
+      "name": "レジェンダリー",
+      "color": "#FFB040",
+      "drop_rate_modifier": 0.01
+    }
+  }
+}

@@ -1,0 +1,396 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ImagePlaceholder from '@/components/ImagePlaceholder.astro';
+
+const featuredCreators = [
+  {
+    name: 'ファンタジーマスター',
+    subscribers: '125K',
+    videos: 234,
+    description: '最速攻略動画を毎日投稿！',
+    latestVideo: '【最新】アップデート2.0の新要素完全解説',
+  },
+  {
+    name: 'ゆっくり攻略ch',
+    subscribers: '89K',
+    videos: 156,
+    description: 'ゆっくり実況で分かりやすく解説',
+    latestVideo: '初心者向け！序盤の進め方完全ガイド',
+  },
+  {
+    name: 'プロゲーマーTAKA',
+    subscribers: '201K',
+    videos: 412,
+    description: 'RTA世界記録保持者の攻略テクニック',
+    latestVideo: '古龍3分討伐！最適化されたビルド紹介',
+  },
+];
+
+const popularVideos = [
+  {
+    title: '【完全版】最強装備の作り方まとめ',
+    creator: 'ファンタジーマスター',
+    views: '234K',
+    duration: '25:43',
+    uploaded: '2日前',
+  },
+  {
+    title: '金策効率ランキングTOP10【2024年版】',
+    creator: 'お金稼ぎ専門ch',
+    views: '156K',
+    duration: '18:22',
+    uploaded: '1週間前',
+  },
+  {
+    title: '隠しダンジョン完全攻略ガイド',
+    creator: 'ダンジョン探索隊',
+    views: '98K',
+    duration: '32:15',
+    uploaded: '3日前',
+  },
+  {
+    title: '全ライフマスターになるまでの道のり #1',
+    creator: 'のんびりプレイ日記',
+    views: '45K',
+    duration: '45:00',
+    uploaded: '5日前',
+  },
+  {
+    title: 'アップデート情報まとめ！新イベント解説',
+    creator: '公式チャンネル',
+    views: '567K',
+    duration: '12:34',
+    uploaded: '1日前',
+  },
+  {
+    title: 'PvPで勝つための立ち回り講座',
+    creator: 'PvP専門解説',
+    views: '78K',
+    duration: '28:45',
+    uploaded: '4日前',
+  },
+];
+
+const videoCategories = [
+  { name: '攻略・解説', count: 1234, icon: '📖' },
+  { name: '実況プレイ', count: 892, icon: '🎮' },
+  { name: 'RTA・やり込み', count: 234, icon: '⚡' },
+  { name: '初心者向け', count: 567, icon: '🔰' },
+  { name: 'アップデート情報', count: 123, icon: '📢' },
+  { name: 'ライブ配信', count: 45, icon: '🔴' },
+];
+---
+
+<BaseLayout
+  title="YouTube動画 - ファンタジーライフi 攻略Wiki"
+  description="ファンタジーライフiの攻略動画、実況プレイ、解説動画をまとめて紹介。"
+  keywords={['YouTube', '動画', '実況', '攻略動画', '解説']}
+>
+  <!-- ヘッダー -->
+  <section class="bg-gradient-to-r from-red-600 to-pink-600 text-white py-12">
+    <div class="container-content">
+      <div class="flex items-center space-x-2 text-sm mb-2">
+        <a href="/" class="hover:text-red-200 transition-colors">ホーム</a>
+        <span>/</span>
+        <a href="/community" class="hover:text-red-200 transition-colors">コミュニティ</a>
+        <span>/</span>
+        <span>YouTube動画</span>
+      </div>
+      <h1 class="text-4xl font-display font-bold mb-4">YouTube動画まとめ</h1>
+      <p class="text-xl">人気クリエイターの攻略動画を厳選して紹介！</p>
+    </div>
+  </section>
+
+  <!-- 動画カテゴリー -->
+  <section class="py-8 bg-gray-50 dark:bg-background-dark-secondary">
+    <div class="container-content">
+      <div class="flex flex-wrap gap-3 justify-center">
+        {videoCategories.map((category) => (
+          <a
+            href={`#${category.name}`}
+            class="inline-flex items-center px-4 py-2 bg-white dark:bg-background-dark rounded-full shadow-sm hover:shadow-md transition-shadow"
+          >
+            <span class="text-lg mr-2">{category.icon}</span>
+            <span class="font-medium">{category.name}</span>
+            <span class="ml-2 text-sm text-text-secondary dark:text-text-secondary-dark">
+              ({category.count})
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- メインコンテンツ -->
+  <section class="py-12">
+    <div class="container-content">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- 人気動画リスト -->
+        <div class="lg:col-span-2">
+          <h2 class="text-2xl font-display font-bold mb-6">🔥 今週の人気動画</h2>
+          
+          <div class="space-y-4">
+            {popularVideos.map((video) => (
+              <div class="card flex gap-4 hover:shadow-lg transition-shadow">
+                <!-- サムネイル -->
+                <div class="flex-shrink-0">
+                  <ImagePlaceholder
+                    width={160}
+                    height={90}
+                    type="thumbnail"
+                    text="動画"
+                    className="rounded"
+                  />
+                </div>
+                
+                <!-- 動画情報 -->
+                <div class="flex-1">
+                  <h3 class="font-bold mb-1">
+                    <a
+                      href="#"
+                      class="hover:text-primary-600 transition-colors line-clamp-2"
+                    >
+                      {video.title}
+                    </a>
+                  </h3>
+                  <div class="text-sm text-text-secondary dark:text-text-secondary-dark mb-2">
+                    <a href="#" class="hover:text-primary-600 transition-colors">
+                      {video.creator}
+                    </a>
+                  </div>
+                  <div class="flex items-center gap-4 text-xs text-text-secondary dark:text-text-secondary-dark">
+                    <span>{video.views} 回視聴</span>
+                    <span>{video.uploaded}</span>
+                    <span class="ml-auto bg-gray-900 text-white px-2 py-1 rounded">
+                      {video.duration}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- もっと見るボタン -->
+          <div class="mt-6 text-center">
+            <a
+              href="#"
+              class="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              もっと動画を見る
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- サイドバー -->
+        <aside class="space-y-6">
+          <!-- 注目のクリエイター -->
+          <div class="card">
+            <h3 class="font-bold mb-4">⭐ 注目のクリエイター</h3>
+            <div class="space-y-4">
+              {featuredCreators.map((creator) => (
+                <div class="pb-4 border-b border-gray-200 dark:border-gray-700 last:border-0 last:pb-0">
+                  <div class="flex items-start gap-3">
+                    <ImagePlaceholder
+                      width={48}
+                      height={48}
+                      type="avatar"
+                      text=""
+                      className="rounded-full flex-shrink-0"
+                    />
+                    <div class="flex-1">
+                      <h4 class="font-medium">
+                        <a href="#" class="hover:text-primary-600 transition-colors">
+                          {creator.name}
+                        </a>
+                      </h4>
+                      <div class="text-xs text-text-secondary dark:text-text-secondary-dark mb-1">
+                        {creator.subscribers} 登録者 • {creator.videos} 本の動画
+                      </div>
+                      <p class="text-sm text-text-secondary dark:text-text-secondary-dark">
+                        {creator.description}
+                      </p>
+                      <div class="mt-2">
+                        <a href="#" class="text-xs text-primary-600 hover:text-primary-700">
+                          最新: {creator.latestVideo}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- 動画投稿募集 -->
+          <div class="card bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20">
+            <h3 class="font-bold mb-2">📹 動画を掲載したい方へ</h3>
+            <p class="text-sm text-text-secondary dark:text-text-secondary-dark mb-4">
+              あなたの攻略動画を当Wikiで紹介しませんか？
+            </p>
+            <a
+              href="/community/submit-video"
+              class="inline-flex items-center text-sm text-red-600 hover:text-red-700 font-medium"
+            >
+              動画投稿フォーム
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- ライブ配信情報 -->
+          <div class="card">
+            <h3 class="font-bold mb-4 flex items-center">
+              <span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+              現在配信中
+            </h3>
+            <div class="space-y-3">
+              <div class="text-sm">
+                <div class="flex items-center justify-between mb-1">
+                  <a href="#" class="font-medium hover:text-primary-600 transition-colors">
+                    初見プレイ配信中！
+                  </a>
+                  <span class="text-xs text-red-600">LIVE</span>
+                </div>
+                <div class="text-xs text-text-secondary dark:text-text-secondary-dark">
+                  配信者: CasualStreamer • 視聴者: 234人
+                </div>
+              </div>
+              <div class="text-sm">
+                <div class="flex items-center justify-between mb-1">
+                  <a href="#" class="font-medium hover:text-primary-600 transition-colors">
+                    エンドコンテンツRTA
+                  </a>
+                  <span class="text-xs text-red-600">LIVE</span>
+                </div>
+                <div class="text-xs text-text-secondary dark:text-text-secondary-dark">
+                  配信者: SpeedRunner • 視聴者: 567人
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 統計情報 -->
+          <div class="card bg-gray-50 dark:bg-gray-800">
+            <h3 class="font-bold mb-4">📊 動画統計</h3>
+            <dl class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <dt class="text-text-secondary dark:text-text-secondary-dark">総動画数</dt>
+                <dd class="font-medium">3,456本</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-text-secondary dark:text-text-secondary-dark">総再生回数</dt>
+                <dd class="font-medium">12.5M回</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-text-secondary dark:text-text-secondary-dark">登録クリエイター</dt>
+                <dd class="font-medium">234人</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-text-secondary dark:text-text-secondary-dark">今月の新着</dt>
+                <dd class="font-medium">89本</dd>
+              </div>
+            </dl>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- カテゴリー別動画 -->
+  <section class="py-12 bg-gray-50 dark:bg-background-dark-secondary">
+    <div class="container-content">
+      <h2 class="text-2xl font-display font-bold mb-8">カテゴリー別おすすめ動画</h2>
+      
+      <!-- 攻略・解説 -->
+      <div id="攻略・解説" class="mb-12">
+        <h3 class="text-xl font-bold mb-4 flex items-center">
+          <span class="text-2xl mr-2">📖</span>
+          攻略・解説動画
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <div class="card">
+              <ImagePlaceholder
+                width={320}
+                height={180}
+                type="thumbnail"
+                text="攻略動画"
+                className="rounded mb-3"
+              />
+              <h4 class="font-medium mb-1 line-clamp-2">
+                <a href="#" class="hover:text-primary-600 transition-colors">
+                  効率的なレベル上げ方法を徹底解説！1時間でLv50に到達する方法
+                </a>
+              </h4>
+              <div class="text-sm text-text-secondary dark:text-text-secondary-dark">
+                攻略マスター • 45K回視聴 • 3日前
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 初心者向け -->
+      <div id="初心者向け" class="mb-12">
+        <h3 class="text-xl font-bold mb-4 flex items-center">
+          <span class="text-2xl mr-2">🔰</span>
+          初心者向け動画
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <div class="card">
+              <ImagePlaceholder
+                width={320}
+                height={180}
+                type="thumbnail"
+                text="初心者向け"
+                className="rounded mb-3"
+              />
+              <h4 class="font-medium mb-1 line-clamp-2">
+                <a href="#" class="hover:text-primary-600 transition-colors">
+                  【完全初心者向け】ファンタジーライフi 始め方ガイド
+                </a>
+              </h4>
+              <div class="text-sm text-text-secondary dark:text-text-secondary-dark">
+                やさしい解説ch • 23K回視聴 • 1週間前
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- YouTube連携CTA -->
+  <section class="py-12">
+    <div class="container-content">
+      <div class="card bg-gradient-to-r from-red-600 to-pink-600 text-white text-center py-12">
+        <h2 class="text-3xl font-display font-bold mb-4">
+          公式YouTubeチャンネル
+        </h2>
+        <p class="text-lg mb-6 max-w-2xl mx-auto">
+          最新情報やアップデート解説、開発者インタビューなど<br>
+          公式コンテンツを定期的に配信中！
+        </p>
+        <a
+          href="https://youtube.com/@fantasylife-i"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center px-8 py-4 bg-white text-red-600 rounded-lg hover:bg-gray-100 transition-colors font-bold"
+        >
+          <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          チャンネル登録する
+        </a>
+        <div class="mt-4 text-sm">
+          チャンネル登録者数: 156,789人
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

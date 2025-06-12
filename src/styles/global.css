@@ -1,0 +1,239 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  /* 日本語フォントの最適化 */
+  @font-face {
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Noto Sans JP Regular'), local('NotoSansJP-Regular'),
+         url('/fonts/NotoSansJP-Regular.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('Noto Sans JP Bold'), local('NotoSansJP-Bold'),
+         url('/fonts/NotoSansJP-Bold.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'M PLUS Rounded 1c';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('M PLUS Rounded 1c Bold'), local('MPLUSRounded1c-Bold'),
+         url('/fonts/MPLUSRounded1c-Bold.woff2') format('woff2');
+  }
+
+  /* ベーススタイル */
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Noto Sans JP', system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-background text-text-primary;
+  }
+
+  /* ダークモード */
+  .dark {
+    @apply bg-background-dark text-text-primary-dark;
+  }
+
+  .dark .bg-background {
+    @apply bg-background-dark;
+  }
+
+  .dark .text-text-secondary {
+    @apply text-text-secondary-dark;
+  }
+
+  /* 見出しスタイル */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+
+  /* リンクのデフォルトスタイル */
+  a {
+    @apply text-primary-600 hover:text-primary-700 transition-colors;
+  }
+
+  .dark a {
+    @apply text-primary-400 hover:text-primary-300;
+  }
+
+  /* フォーカススタイル（アクセシビリティ） */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+  }
+
+  .dark *:focus-visible {
+    @apply ring-offset-background-dark;
+  }
+}
+
+@layer components {
+  /* コンテナのレスポンシブ設定 */
+  .container-content {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* カードコンポーネント */
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 transition-shadow hover:shadow-lg;
+  }
+
+  .dark .card {
+    @apply bg-background-dark-secondary;
+  }
+
+  /* ボタンコンポーネント */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary-600 text-white hover:bg-secondary-700 focus-visible:ring-secondary-500;
+  }
+
+  /* タグコンポーネント */
+  .tag {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .tag-primary {
+    @apply tag bg-primary-100 text-primary-800;
+  }
+
+  .dark .tag-primary {
+    @apply bg-primary-900 text-primary-200;
+  }
+
+  /* 記事のタイポグラフィ */
+  .prose-custom {
+    @apply prose prose-lg max-w-none;
+    @apply prose-headings:font-display prose-headings:scroll-mt-20;
+    @apply prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline;
+    @apply prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded;
+    @apply prose-pre:bg-gray-900 prose-pre:text-gray-100;
+    @apply prose-img:rounded-lg prose-img:shadow-md;
+  }
+
+  .dark .prose-custom {
+    @apply prose-invert;
+    @apply prose-a:text-primary-400;
+    @apply prose-code:bg-gray-800;
+  }
+
+  /* グリッドレイアウト */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+  }
+
+  /* スケルトンローダー */
+  .skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  .dark .skeleton {
+    @apply bg-gray-700;
+  }
+
+  /* 広告スロット */
+  .ad-container {
+    @apply flex items-center justify-center bg-gray-100 rounded-lg min-h-[250px] relative overflow-hidden;
+  }
+
+  .dark .ad-container {
+    @apply bg-gray-800;
+  }
+
+  /* トーストメッセージ */
+  .toast {
+    @apply fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300;
+  }
+
+  .toast-success {
+    @apply toast bg-green-600 text-white;
+  }
+
+  .toast-error {
+    @apply toast bg-red-600 text-white;
+  }
+}
+
+@layer utilities {
+  /* テキストグラデーション */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent;
+  }
+
+  /* カスタムスクロールバー */
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.primary.400') theme('colors.gray.200');
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    @apply bg-gray-200 rounded-full;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-primary-400 rounded-full hover:bg-primary-500;
+  }
+
+  .dark .scrollbar-custom::-webkit-scrollbar-track {
+    @apply bg-gray-700;
+  }
+
+  .dark .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-primary-600 hover:bg-primary-500;
+  }
+
+  /* アニメーション */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* ぼかし背景 */
+  .backdrop-blur-custom {
+    @apply backdrop-blur-md bg-white/80;
+  }
+
+  .dark .backdrop-blur-custom {
+    @apply bg-background-dark/80;
+  }
+
+  /* アスペクト比 */
+  .aspect-thumbnail {
+    @apply aspect-[16/9];
+  }
+
+  .aspect-card {
+    @apply aspect-[4/3];
+  }
+
+  /* セーフエリア（モバイル） */
+  .safe-area-inset {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

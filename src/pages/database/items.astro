@@ -1,0 +1,261 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import itemsData from '@/data/items.json';
+
+// カテゴリー別にアイテムを分類
+const itemsByCategory = itemsData.items.reduce((acc, item) => {
+  if (!acc[item.category]) {
+    acc[item.category] = [];
+  }
+  acc[item.category].push(item);
+  return acc;
+}, {} as Record<string, typeof itemsData.items>);
+
+// カテゴリー情報を取得
+const categoryInfo = itemsData.categories.reduce((acc, cat) => {
+  acc[cat.id] = cat;
+  return acc;
+}, {} as Record<string, typeof itemsData.categories[0]>);
+
+// レアリティ情報
+const rarityInfo = itemsData.rarities;
+---
+
+<BaseLayout
+  title="アイテムデータベース - ファンタジーライフi 攻略Wiki"
+  description="ファンタジーライフiの全アイテム一覧。回復薬、素材、食材など、カテゴリー別に検索可能。"
+  keywords={['アイテム', 'データベース', '素材', '回復薬', '食材']}
+>
+  <!-- ヘッダー -->
+  <section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-8">
+    <div class="container-content">
+      <div class="flex items-center space-x-2 text-sm mb-2">
+        <a href="/" class="hover:text-primary-200 transition-colors">ホーム</a>
+        <span>/</span>
+        <a href="/database" class="hover:text-primary-200 transition-colors">データベース</a>
+        <span>/</span>
+        <span>アイテム</span>
+      </div>
+      <h1 class="text-3xl font-display font-bold">アイテムデータベース</h1>
+    </div>
+  </section>
+
+  <!-- フィルター -->
+  <section class="py-6 bg-gray-50 dark:bg-background-dark-secondary sticky top-16 z-40">
+    <div class="container-content">
+      <div class="flex flex-wrap gap-4 items-center">
+        <div class="flex items-center space-x-2">
+          <label for="category-filter" class="text-sm font-medium">カテゴリー:</label>
+          <select
+            id="category-filter"
+            class="px-3 py-1 rounded-md border border-gray-300 focus:border-primary-500 focus:outline-none"
+          >
+            <option value="all">すべて</option>
+            {Object.entries(categoryInfo).map(([id, cat]) => (
+              <option value={id}>{cat.icon} {id}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <label for="rarity-filter" class="text-sm font-medium">レアリティ:</label>
+          <select
+            id="rarity-filter"
+            class="px-3 py-1 rounded-md border border-gray-300 focus:border-primary-500 focus:outline-none"
+          >
+            <option value="all">すべて</option>
+            {Object.entries(rarityInfo).map(([key, info]) => (
+              <option value={key}>{info.name}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <label for="search-input" class="text-sm font-medium">検索:</label>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="アイテム名で検索..."
+            class="px-3 py-1 rounded-md border border-gray-300 focus:border-primary-500 focus:outline-none"
+          />
+        </div>
+        
+        <button
+          id="reset-filters"
+          class="ml-auto text-sm text-primary-600 hover:text-primary-700 transition-colors"
+        >
+          フィルターをリセット
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- アイテム一覧 -->
+  <section class="py-8">
+    <div class="container-content">
+      {Object.entries(itemsByCategory).map(([category, items]) => (
+        <div class="mb-12 item-category" data-category={category}>
+          <h2 class="text-2xl font-display font-bold mb-4 flex items-center space-x-2">
+            <span>{categoryInfo[category]?.icon || '📦'}</span>
+            <span>{category}</span>
+            <span class="text-base text-text-secondary dark:text-text-secondary-dark">
+              ({items.length}件)
+            </span>
+          </h2>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full bg-white dark:bg-background-dark rounded-lg shadow-sm">
+              <thead>
+                <tr class="border-b border-gray-200 dark:border-gray-700">
+                  <th class="text-left px-4 py-3 font-medium">アイテム名</th>
+                  <th class="text-left px-4 py-3 font-medium">レアリティ</th>
+                  <th class="text-left px-4 py-3 font-medium">説明</th>
+                  <th class="text-left px-4 py-3 font-medium">入手方法</th>
+                  <th class="text-right px-4 py-3 font-medium">売値</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item, index) => (
+                  <tr
+                    class={`
+                      item-row border-b border-gray-100 dark:border-gray-800
+                      hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
+                      ${index % 2 === 0 ? '' : 'bg-gray-50/50 dark:bg-gray-900/50'}
+                    `}
+                    data-name={item.name.toLowerCase()}
+                    data-rarity={item.rarity}
+                  >
+                    <td class="px-4 py-3 font-medium">
+                      <a
+                        href={`/database/items/${item.id}`}
+                        class="hover:text-primary-600 transition-colors"
+                      >
+                        {item.name}
+                      </a>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span
+                        class="inline-flex px-2 py-1 text-xs rounded-full"
+                        style={`background-color: ${rarityInfo[item.rarity].color}20; color: ${rarityInfo[item.rarity].color}`}
+                      >
+                        {rarityInfo[item.rarity].name}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-text-secondary dark:text-text-secondary-dark">
+                      {item.description}
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                      {item.acquisition.map((method) => (
+                        <div class="mb-1">
+                          <span class="font-medium">{method.method}:</span>
+                          {' '}
+                          {method.location || method.source || method.life}
+                          {method.price && ` (${method.price}G)`}
+                        </div>
+                      ))}
+                    </td>
+                    <td class="px-4 py-3 text-right font-medium">
+                      {item.sell_price}G
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 統計情報 -->
+  <section class="py-8 bg-gray-50 dark:bg-background-dark-secondary">
+    <div class="container-content">
+      <h2 class="text-xl font-display font-bold mb-4">アイテム統計</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="card text-center">
+          <div class="text-3xl font-bold text-primary-600">{itemsData.items.length}</div>
+          <div class="text-sm text-text-secondary dark:text-text-secondary-dark">総アイテム数</div>
+        </div>
+        <div class="card text-center">
+          <div class="text-3xl font-bold text-secondary-600">{Object.keys(categoryInfo).length}</div>
+          <div class="text-sm text-text-secondary dark:text-text-secondary-dark">カテゴリー数</div>
+        </div>
+        <div class="card text-center">
+          <div class="text-3xl font-bold text-accent-600">
+            {itemsData.items.filter(item => item.rarity === 'legendary').length}
+          </div>
+          <div class="text-sm text-text-secondary dark:text-text-secondary-dark">レジェンダリー</div>
+        </div>
+        <div class="card text-center">
+          <div class="text-3xl font-bold text-primary-600">
+            {Math.max(...itemsData.items.map(item => item.sell_price))}G
+          </div>
+          <div class="text-sm text-text-secondary dark:text-text-secondary-dark">最高売値</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // フィルター機能
+  const categoryFilter = document.getElementById('category-filter') as HTMLSelectElement;
+  const rarityFilter = document.getElementById('rarity-filter') as HTMLSelectElement;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const resetButton = document.getElementById('reset-filters');
+  
+  const filterItems = () => {
+    const categoryValue = categoryFilter.value;
+    const rarityValue = rarityFilter.value;
+    const searchValue = searchInput.value.toLowerCase();
+    
+    // カテゴリーの表示/非表示
+    document.querySelectorAll('.item-category').forEach(category => {
+      const categoryEl = category as HTMLElement;
+      if (categoryValue === 'all' || categoryEl.dataset.category === categoryValue) {
+        categoryEl.style.display = 'block';
+      } else {
+        categoryEl.style.display = 'none';
+      }
+    });
+    
+    // アイテム行のフィルタリング
+    document.querySelectorAll('.item-row').forEach(row => {
+      const rowEl = row as HTMLElement;
+      const name = rowEl.dataset.name || '';
+      const rarity = rowEl.dataset.rarity || '';
+      
+      let show = true;
+      
+      if (rarityValue !== 'all' && rarity !== rarityValue) {
+        show = false;
+      }
+      
+      if (searchValue && !name.includes(searchValue)) {
+        show = false;
+      }
+      
+      rowEl.style.display = show ? '' : 'none';
+    });
+    
+    // 空のカテゴリーを非表示
+    document.querySelectorAll('.item-category').forEach(category => {
+      const categoryEl = category as HTMLElement;
+      const visibleRows = categoryEl.querySelectorAll('.item-row:not([style*="display: none"])');
+      if (visibleRows.length === 0 && categoryValue === 'all') {
+        categoryEl.style.display = 'none';
+      }
+    });
+  };
+  
+  categoryFilter.addEventListener('change', filterItems);
+  rarityFilter.addEventListener('change', filterItems);
+  searchInput.addEventListener('input', filterItems);
+  
+  resetButton?.addEventListener('click', () => {
+    categoryFilter.value = 'all';
+    rarityFilter.value = 'all';
+    searchInput.value = '';
+    filterItems();
+  });
+</script>

@@ -1,0 +1,100 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  keywords?: string[];
+  image?: string;
+  noindex?: boolean;
+  canonical?: string;
+  jsonLd?: object;
+}
+
+const {
+  title,
+  description,
+  keywords = [],
+  image = '/images/og-default.png',
+  noindex = false,
+  canonical,
+  jsonLd,
+} = Astro.props;
+
+const siteTitle = 'ファンタジーライフi 攻略Wiki';
+const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://fantasylife-i.com';
+const canonicalURL = canonical || new URL(Astro.url.pathname, siteUrl).toString();
+const imageURL = new URL(image, siteUrl).toString();
+
+// デフォルトのJSON-LD構造化データ
+const defaultJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteTitle,
+  url: siteUrl,
+  description: description,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${siteUrl}/search?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const structuredData = jsonLd || defaultJsonLd;
+---
+
+<!-- 基本メタタグ -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="generator" content={Astro.generator} />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+<link rel="canonical" href={canonicalURL} />
+
+<!-- ファビコン -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<!-- OGP（Open Graph Protocol） -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageURL} />
+<meta property="og:site_name" content={siteTitle} />
+<meta property="og:locale" content="ja_JP" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageURL} />
+
+<!-- 検索エンジン制御 -->
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- プリロード（パフォーマンス最適化） -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+
+<!-- 構造化データ（JSON-LD） -->
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+<!-- テーマカラー -->
+<meta name="theme-color" content="#0ea5e9" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c4a6e" />
+
+<!-- 追加のSEO最適化 -->
+<meta name="format-detection" content="telephone=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="FL攻略" />

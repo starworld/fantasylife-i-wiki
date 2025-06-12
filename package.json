@@ -1,0 +1,40 @@
+{
+  "name": "fantasylife-i",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build && npm run pagefind",
+    "pagefind": "pagefind --site dist",
+    "preview": "astro preview",
+    "postbuild": "pagefind --site dist",
+    "astro": "astro",
+    "check": "astro check",
+    "lint": "eslint src",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,md,mdx,astro}\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "ファンタジーライフi『グルグルの竜と時をぬすむ少女』世界一詳しい攻略サイト",
+  "devDependencies": {
+    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/rss": "^4.0.12",
+    "@astrojs/sitemap": "^3.4.1",
+    "@astrojs/tailwind": "^6.0.2",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/node": "^24.0.1",
+    "astro": "^5.9.2",
+    "js-yaml": "^4.1.0",
+    "pagefind": "^1.3.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4"
+  }
+}

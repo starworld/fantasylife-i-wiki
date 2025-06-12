@@ -1,0 +1,77 @@
+---
+import '@/styles/global.css';
+import BaseHead from '@/components/common/BaseHead.astro';
+import NavBar from '@/components/common/NavBar.astro';
+import Footer from '@/components/common/Footer.astro';
+import GoogleAnalytics from '@/components/common/GoogleAnalytics.astro';
+import SearchModal from '@/components/common/SearchModal.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  keywords?: string[];
+  image?: string;
+  noindex?: boolean;
+  canonical?: string;
+  jsonLd?: object;
+}
+
+const {
+  title,
+  description,
+  keywords = [],
+  image,
+  noindex = false,
+  canonical,
+  jsonLd,
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="ja" class="scrollbar-custom">
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      keywords={keywords}
+      image={image}
+      noindex={noindex}
+      canonical={canonical}
+      jsonLd={jsonLd}
+    />
+    <GoogleAnalytics />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <NavBar />
+    
+    <main class="flex-grow pt-16">
+      <slot />
+    </main>
+    
+    <Footer />
+    
+    <SearchModal />
+    
+    <!-- ダークモード切り替えスクリプト -->
+    <script>
+      // ダークモードの初期化
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
+      window.localStorage.setItem('theme', theme);
+    </script>
+  </body>
+</html>

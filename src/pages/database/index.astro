@@ -1,0 +1,320 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// JSONデータをインポート
+import itemsData from '@/data/items.json';
+import equipmentData from '@/data/equipment.json';
+import monstersData from '@/data/monsters.json';
+
+// データベース記事を取得
+const databaseArticles = await getCollection('database');
+
+// カテゴリー別にアイテム数をカウント
+const itemCount = itemsData.items.length;
+const equipmentCount = equipmentData.equipment.length;
+const monsterCount = monstersData.monsters.length;
+
+const categories = [
+  {
+    id: 'items',
+    name: 'アイテム',
+    icon: '🎒',
+    count: itemCount,
+    description: '回復薬、素材、食材などの全アイテムデータ',
+    href: '/database/items',
+    color: 'primary',
+  },
+  {
+    id: 'equipment',
+    name: '装備',
+    icon: '⚔️',
+    count: equipmentCount,
+    description: '武器、防具、アクセサリーの性能と入手方法',
+    href: '/database/equipment',
+    color: 'secondary',
+  },
+  {
+    id: 'monsters',
+    name: 'モンスター',
+    icon: '👾',
+    count: monsterCount,
+    description: 'モンスターの詳細データと攻略情報',
+    href: '/database/monsters',
+    color: 'accent',
+  },
+  {
+    id: 'tamagemono',
+    name: 'たまげもの',
+    icon: '🥚',
+    count: 25,
+    description: 'お供モンスターの能力と入手方法',
+    href: '/database/tamagemono',
+    color: 'primary',
+  },
+  {
+    id: 'recipes',
+    name: 'レシピ',
+    icon: '📜',
+    count: 150,
+    description: '料理、錬金、製作のレシピ集',
+    href: '/database/recipes',
+    color: 'secondary',
+  },
+  {
+    id: 'maps',
+    name: 'マップ',
+    icon: '🗺️',
+    count: 30,
+    description: 'エリアマップと重要ポイント',
+    href: '/database/maps',
+    color: 'accent',
+  },
+];
+
+// 最新のデータベース記事
+const latestArticles = databaseArticles
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title="データベース - ファンタジーライフi 攻略Wiki"
+  description="アイテム、装備、モンスター、たまげもの、レシピなど、ファンタジーライフiの全データを網羅した総合データベース。"
+  keywords={['データベース', 'アイテム', '装備', 'モンスター', 'レシピ']}
+>
+  <!-- ヘッダーセクション -->
+  <section class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-12">
+    <div class="container-content">
+      <h1 class="text-4xl font-display font-bold mb-4">
+        データベース
+      </h1>
+      <p class="text-xl">
+        ファンタジーライフiの全データを網羅した総合データベース
+      </p>
+    </div>
+  </section>
+
+  <!-- 検索バー -->
+  <section class="py-8 bg-gray-50 dark:bg-background-dark-secondary">
+    <div class="container-content">
+      <form action="/database/search" method="get" class="max-w-2xl mx-auto">
+        <div class="relative">
+          <input
+            type="search"
+            name="q"
+            placeholder="アイテム名、モンスター名などで検索..."
+            class="w-full px-6 py-4 pr-12 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none transition-colors text-lg"
+          />
+          <button
+            type="submit"
+            class="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- カテゴリーカード -->
+  <section class="py-12">
+    <div class="container-content">
+      <h2 class="text-2xl font-display font-bold mb-8">データベースカテゴリー</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {categories.map((category) => (
+          <a
+            href={category.href}
+            class={`
+              card group relative overflow-hidden
+              hover:shadow-xl transition-all duration-300
+              border-2 border-transparent hover:border-${category.color}-500
+            `}
+          >
+            <div class="flex items-start justify-between mb-4">
+              <span class="text-4xl">{category.icon}</span>
+              <span class={`tag tag-${category.color} text-xs`}>
+                {category.count}件
+              </span>
+            </div>
+            
+            <h3 class="text-xl font-bold mb-2 group-hover:text-primary-600 transition-colors">
+              {category.name}
+            </h3>
+            
+            <p class="text-sm text-text-secondary dark:text-text-secondary-dark">
+              {category.description}
+            </p>
+            
+            <div class="mt-4 flex items-center text-primary-600 text-sm font-medium">
+              データを見る
+              <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+            
+            <!-- 装飾的な背景 -->
+            <div class={`
+              absolute -right-8 -bottom-8 text-8xl opacity-10
+              group-hover:scale-110 transition-transform duration-300
+            `}>
+              {category.icon}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 人気のデータ -->
+  <section class="py-12 bg-gray-50 dark:bg-background-dark-secondary">
+    <div class="container-content">
+      <h2 class="text-2xl font-display font-bold mb-8">よく検索されるデータ</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- アイテム -->
+        <div class="card">
+          <h3 class="font-bold mb-3">人気アイテム</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="/database/items/crystal_rainbow" class="text-sm hover:text-primary-600 transition-colors">
+                虹色のクリスタル
+              </a>
+            </li>
+            <li>
+              <a href="/database/items/elixir" class="text-sm hover:text-primary-600 transition-colors">
+                エリクサー
+              </a>
+            </li>
+            <li>
+              <a href="/database/items/golden_apple" class="text-sm hover:text-primary-600 transition-colors">
+                黄金りんご
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 装備 -->
+        <div class="card">
+          <h3 class="font-bold mb-3">最強装備</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="/database/equipment/sword_flame" class="text-sm hover:text-primary-600 transition-colors">
+                炎の剣
+              </a>
+            </li>
+            <li>
+              <a href="/database/equipment/armor_mythril" class="text-sm hover:text-primary-600 transition-colors">
+                ミスリルプレート
+              </a>
+            </li>
+            <li>
+              <a href="/database/equipment/ring_strength" class="text-sm hover:text-primary-600 transition-colors">
+                力の指輪
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- モンスター -->
+        <div class="card">
+          <h3 class="font-bold mb-3">注目モンスター</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="/database/monsters/dragon_flame" class="text-sm hover:text-primary-600 transition-colors">
+                紅蓮の竜
+              </a>
+            </li>
+            <li>
+              <a href="/database/monsters/slime_golden" class="text-sm hover:text-primary-600 transition-colors">
+                金色スライム
+              </a>
+            </li>
+            <li>
+              <a href="/database/monsters/golem_stone" class="text-sm hover:text-primary-600 transition-colors">
+                ストーンゴーレム
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- レシピ -->
+        <div class="card">
+          <h3 class="font-bold mb-3">人気レシピ</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="/database/recipes/ultimate_potion" class="text-sm hover:text-primary-600 transition-colors">
+                究極ポーション
+              </a>
+            </li>
+            <li>
+              <a href="/database/recipes/legendary_sword" class="text-sm hover:text-primary-600 transition-colors">
+                伝説の剣
+              </a>
+            </li>
+            <li>
+              <a href="/database/recipes/golden_cuisine" class="text-sm hover:text-primary-600 transition-colors">
+                黄金料理
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 最新の攻略記事 -->
+  {latestArticles.length > 0 && (
+    <section class="py-12">
+      <div class="container-content">
+        <h2 class="text-2xl font-display font-bold mb-8">最新のデータベース記事</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {latestArticles.map((article) => (
+            <article class="card">
+              <div class="flex items-center justify-between mb-2">
+                <span class="tag tag-primary text-xs">
+                  {article.data.category}
+                </span>
+                <time class="text-xs text-text-secondary dark:text-text-secondary-dark">
+                  {article.data.publishDate.toLocaleDateString('ja-JP')}
+                </time>
+              </div>
+              
+              <h3 class="font-bold text-lg mb-2">
+                <a href={`/database/${article.slug}`} class="hover:text-primary-600 transition-colors">
+                  {article.data.title}
+                </a>
+              </h3>
+              
+              <p class="text-sm text-text-secondary dark:text-text-secondary-dark">
+                {article.data.description}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- データ提供について -->
+  <section class="py-12 bg-primary-50 dark:bg-primary-950">
+    <div class="container-content text-center">
+      <h2 class="text-2xl font-display font-bold mb-4">
+        データの正確性について
+      </h2>
+      <p class="text-text-secondary dark:text-text-secondary-dark max-w-2xl mx-auto">
+        当サイトのデータは、実際のゲームプレイと検証に基づいて作成されています。
+        アップデートにより変更される可能性がありますので、最新情報は公式サイトもご確認ください。
+      </p>
+      <div class="mt-6">
+        <a href="/about/data-policy" class="text-primary-600 hover:text-primary-700 transition-colors">
+          データポリシーについて →
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,242 @@
+# モンスターデータベース
+monsters:
+  # 序盤モンスター
+  - id: "slime_green"
+    name: "みどりスライム"
+    category: "スライム"
+    level: 1
+    rarity: "common"
+    description: "最も基本的なモンスター。ぷるぷるしている"
+    stats:
+      hp: 50
+      attack: 5
+      defense: 3
+      magic_defense: 2
+      speed: 10
+    element: "無"
+    weakness: ["火"]
+    resistance: ["水"]
+    skills:
+      - name: "体当たり"
+        damage: 10
+        type: "物理"
+      - name: "ぷるぷる"
+        effect: "回避率上昇"
+    drops:
+      common:
+        - item_id: "slime_jelly"
+          rate: 80
+          quantity: "1-2"
+      rare:
+        - item_id: "slime_core"
+          rate: 10
+          quantity: 1
+    exp_reward: 10
+    gold_reward: "5-10"
+    spawn_locations:
+      - area: "始まりの平原"
+        spawn_rate: "高"
+        time: "常時"
+
+  - id: "wolf_gray"
+    name: "灰色オオカミ"
+    category: "獣"
+    level: 5
+    rarity: "common"
+    description: "群れで行動する賢い捕食者"
+    stats:
+      hp: 120
+      attack: 15
+      defense: 8
+      magic_defense: 5
+      speed: 25
+    element: "無"
+    weakness: ["火"]
+    skills:
+      - name: "噛みつき"
+        damage: 20
+        type: "物理"
+        effect: "出血付与（10%）"
+      - name: "遠吠え"
+        effect: "仲間を呼ぶ"
+    behavior:
+      aggression: "中"
+      group_size: "2-4"
+      detection_range: 15
+    drops:
+      common:
+        - item_id: "wolf_pelt"
+          rate: 70
+          quantity: 1
+        - item_id: "wolf_fang"
+          rate: 50
+          quantity: "1-2"
+      rare:
+        - item_id: "wolf_claw"
+          rate: 20
+          quantity: 1
+    exp_reward: 35
+    gold_reward: "15-25"
+    spawn_locations:
+      - area: "森の入り口"
+        spawn_rate: "中"
+        time: "夜間"
+
+  # 中盤モンスター
+  - id: "golem_stone"
+    name: "ストーンゴーレム"
+    category: "ゴーレム"
+    level: 25
+    rarity: "uncommon"
+    description: "岩でできた巨大な守護者"
+    stats:
+      hp: 800
+      attack: 45
+      defense: 60
+      magic_defense: 20
+      speed: 5
+    element: "土"
+    weakness: ["水", "雷"]
+    resistance: ["火", "物理"]
+    skills:
+      - name: "岩石投げ"
+        damage: 60
+        type: "物理"
+        range: "遠距離"
+      - name: "大地の怒り"
+        damage: 80
+        type: "魔法"
+        area: "範囲"
+      - name: "石化の視線"
+        effect: "石化付与（20%）"
+    drops:
+      common:
+        - item_id: "stone_fragment"
+          rate: 100
+          quantity: "3-5"
+        - item_id: "golem_core"
+          rate: 60
+          quantity: 1
+      rare:
+        - item_id: "ancient_stone"
+          rate: 15
+          quantity: 1
+    exp_reward: 250
+    gold_reward: "80-120"
+    spawn_locations:
+      - area: "古代の遺跡"
+        spawn_rate: "低"
+        time: "常時"
+        respawn_time: 300
+
+  # ボスモンスター
+  - id: "dragon_flame"
+    name: "紅蓮の竜"
+    category: "ドラゴン"
+    level: 50
+    rarity: "legendary"
+    boss: true
+    description: "炎を司る古の竜。その咆哮は大地を焼き尽くす"
+    stats:
+      hp: 5000
+      attack: 120
+      defense: 80
+      magic_defense: 100
+      speed: 40
+    element: "火"
+    weakness: ["水", "氷"]
+    resistance: ["火", "土"]
+    immunity: ["炎上", "睡眠"]
+    phases:
+      - phase: 1
+        hp_threshold: 100
+        skills:
+          - name: "火炎ブレス"
+            damage: 150
+            type: "魔法"
+            area: "前方範囲"
+          - name: "尻尾薙ぎ払い"
+            damage: 100
+            type: "物理"
+            area: "周囲"
+      - phase: 2
+        hp_threshold: 50
+        skills:
+          - name: "メテオストーム"
+            damage: 200
+            type: "魔法"
+            area: "全体"
+          - name: "竜の咆哮"
+            effect: "恐怖付与（50%）"
+      - phase: 3
+        hp_threshold: 20
+        skills:
+          - name: "紅蓮の業火"
+            damage: 300
+            type: "魔法"
+            area: "全体"
+            effect: "継続ダメージ"
+    drops:
+      guaranteed:
+        - item_id: "dragon_scale_red"
+          quantity: "3-5"
+        - item_id: "dragon_fang"
+          quantity: "1-2"
+      common:
+        - item_id: "dragon_claw"
+          rate: 80
+          quantity: 1
+      rare:
+        - item_id: "dragon_heart"
+          rate: 30
+          quantity: 1
+      ultra_rare:
+        - item_id: "flame_orb"
+          rate: 5
+          quantity: 1
+    exp_reward: 2000
+    gold_reward: "500-1000"
+    spawn_locations:
+      - area: "竜の巣・最深部"
+        spawn_rate: "一度のみ"
+        respawn_time: 86400
+    battle_tips:
+      - "火属性耐性装備は必須"
+      - "第2フェーズからは範囲攻撃が激化"
+      - "水属性の攻撃が効果的"
+
+# モンスターカテゴリー
+categories:
+  - id: "スライム"
+    description: "最も基本的なモンスター種族"
+  - id: "獣"
+    description: "動物型のモンスター"
+  - id: "ゴーレム"
+    description: "無機物で構成された人工生命体"
+  - id: "ドラゴン"
+    description: "最強種族の一つ"
+  - id: "不死"
+    description: "アンデッド系モンスター"
+  - id: "精霊"
+    description: "元素の力を持つ存在"
+
+# 属性相性
+element_chart:
+  火:
+    strong_against: ["風", "氷"]
+    weak_against: ["水", "土"]
+  水:
+    strong_against: ["火", "土"]
+    weak_against: ["雷", "風"]
+  風:
+    strong_against: ["土", "雷"]
+    weak_against: ["火", "氷"]
+  土:
+    strong_against: ["雷", "氷"]
+    weak_against: ["風", "水"]
+  雷:
+    strong_against: ["水", "氷"]
+    weak_against: ["土", "風"]
+  氷:
+    strong_against: ["風", "水"]
+    weak_against: ["火", "雷"]

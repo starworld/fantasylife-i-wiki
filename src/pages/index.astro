@@ -1,0 +1,245 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ArticleCard from '@/components/common/ArticleCard.astro';
+import ImagePlaceholder from '@/components/ImagePlaceholder.astro';
+
+// 仮のデータ（後でContent Collectionsから取得）
+const featuredArticles = [
+  {
+    title: '序盤の効率的な進め方 - 初心者必見の攻略ガイド',
+    description: 'ファンタジーライフiを始めたばかりの方向けに、序盤を効率的に進めるためのコツやポイントをまとめました。',
+    href: '/story/beginner-guide',
+    image: '/images/articles/beginner-guide.jpg',
+    category: '初心者向け',
+    date: new Date('2024-01-15'),
+    featured: true,
+    views: 12500,
+  },
+  {
+    title: '全14ライフ完全攻略 - マスターへの道',
+    description: '戦闘系、採取系、製作系の全14ライフをマスターするための詳細な攻略情報を網羅しています。',
+    href: '/lives/all-lives-guide',
+    image: '/images/articles/all-lives.jpg',
+    category: 'ライフ',
+    date: new Date('2024-01-10'),
+    views: 8900,
+  },
+  {
+    title: '最強装備セット一覧 - エンドコンテンツ攻略',
+    description: '各ライフごとの最強装備セットと入手方法を詳しく解説。エンドコンテンツ攻略に必須の情報です。',
+    href: '/database/best-equipment',
+    image: '/images/articles/equipment.jpg',
+    category: '装備',
+    date: new Date('2024-01-08'),
+    views: 15300,
+  },
+];
+
+const recentNews = [
+  {
+    title: 'アップデート1.2.0配信開始！新たまげもの追加',
+    date: new Date('2024-01-20'),
+    category: 'アップデート',
+  },
+  {
+    title: '期間限定イベント「雪祭り」開催中',
+    date: new Date('2024-01-18'),
+    category: 'イベント',
+  },
+  {
+    title: 'サーバーメンテナンスのお知らせ（1/25）',
+    date: new Date('2024-01-17'),
+    category: 'メンテナンス',
+  },
+];
+
+const categories = [
+  { name: 'ストーリー攻略', href: '/story', icon: '📖', color: 'primary' },
+  { name: 'ライフ', href: '/lives', icon: '⚔️', color: 'secondary' },
+  { name: 'データベース', href: '/database', icon: '📊', color: 'accent' },
+  { name: 'マップ', href: '/maps', icon: '🗺️', color: 'primary' },
+  { name: 'コミュニティ', href: '/community', icon: '👥', color: 'secondary' },
+  { name: '初心者ガイド', href: '/guides/beginner', icon: '🔰', color: 'accent' },
+];
+---
+
+<BaseLayout
+  title="ファンタジーライフi 攻略Wiki - 世界一詳しい攻略サイト"
+  description="ファンタジーライフi『グルグルの竜と時をぬすむ少女』の最新攻略情報を網羅。ストーリー攻略、全14ライフ攻略、アイテムデータベース、マップ情報など。"
+  keywords={['ファンタジーライフi', '攻略', 'グルグルの竜', 'Wiki', 'データベース']}
+>
+  <!-- ヒーローセクション -->
+  <section class="bg-gradient-to-b from-primary-50 to-white dark:from-primary-950 dark:to-background-dark py-12 md:py-20">
+    <div class="container-content">
+      <div class="text-center max-w-4xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-display font-bold mb-6 text-gradient">
+          ファンタジーライフi 攻略Wiki
+        </h1>
+        <p class="text-lg md:text-xl text-text-secondary dark:text-text-secondary-dark mb-8">
+          『グルグルの竜と時をぬすむ少女』の世界一詳しい攻略情報をお届け
+        </p>
+        
+        <!-- 検索バー -->
+        <div class="max-w-2xl mx-auto">
+          <form action="/search" method="get" class="relative">
+            <input
+              type="search"
+              name="q"
+              placeholder="キーワードで検索（例：最強装備、たまげもの）"
+              class="w-full px-6 py-4 pr-12 rounded-full border-2 border-primary-200 focus:border-primary-500 focus:outline-none transition-colors text-lg"
+            />
+            <button
+              type="submit"
+              class="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-primary-600 text-white rounded-full hover:bg-primary-700 transition-colors"
+              aria-label="検索"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- カテゴリーナビゲーション -->
+  <section class="py-12 bg-gray-50 dark:bg-background-dark-secondary">
+    <div class="container-content">
+      <h2 class="text-2xl font-display font-bold mb-8 text-center">カテゴリー</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {categories.map((category) => (
+          <a
+            href={category.href}
+            class={`
+              flex flex-col items-center justify-center p-6 rounded-lg text-center
+              bg-white dark:bg-background-dark shadow-sm hover:shadow-md
+              transition-all duration-200 hover:-translate-y-1
+              border-2 border-transparent hover:border-${category.color}-500
+            `}
+          >
+            <span class="text-3xl mb-2">{category.icon}</span>
+            <span class="font-medium">{category.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 注目記事 -->
+  <section class="py-12">
+    <div class="container-content">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-display font-bold">注目の攻略記事</h2>
+        <a href="/articles" class="text-primary-600 hover:text-primary-700 transition-colors">
+          すべて見る →
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {featuredArticles.map((article) => (
+          <ArticleCard {...article} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 最新情報 -->
+  <section class="py-12 bg-gray-50 dark:bg-background-dark-secondary">
+    <div class="container-content">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- ニュース -->
+        <div class="lg:col-span-2">
+          <h2 class="text-2xl font-display font-bold mb-6">最新ニュース</h2>
+          <div class="space-y-4">
+            {recentNews.map((news) => (
+              <article class="card flex items-center justify-between">
+                <div class="space-y-1">
+                  <div class="flex items-center space-x-2">
+                    <span class="tag-primary text-xs">
+                      {news.category}
+                    </span>
+                    <time class="text-xs text-text-secondary dark:text-text-secondary-dark">
+                      {news.date.toLocaleDateString('ja-JP')}
+                    </time>
+                  </div>
+                  <h3 class="font-medium">
+                    <a href="#" class="hover:text-primary-600 transition-colors">
+                      {news.title}
+                    </a>
+                  </h3>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </article>
+            ))}
+          </div>
+          <div class="mt-6">
+            <a href="/news" class="btn-primary">
+              すべてのニュースを見る
+            </a>
+          </div>
+        </div>
+
+        <!-- サイドバー -->
+        <div class="space-y-6">
+          <!-- 人気ランキング -->
+          <div class="card">
+            <h3 class="font-display font-bold mb-4">人気記事ランキング</h3>
+            <ol class="space-y-3">
+              <li class="flex items-start space-x-3">
+                <span class="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                  1
+                </span>
+                <a href="#" class="text-sm hover:text-primary-600 transition-colors">
+                  最強装備セット一覧
+                </a>
+              </li>
+              <li class="flex items-start space-x-3">
+                <span class="flex-shrink-0 w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                  2
+                </span>
+                <a href="#" class="text-sm hover:text-primary-600 transition-colors">
+                  序盤の効率的な進め方
+                </a>
+              </li>
+              <li class="flex items-start space-x-3">
+                <span class="flex-shrink-0 w-8 h-8 bg-primary-400 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                  3
+                </span>
+                <a href="#" class="text-sm hover:text-primary-600 transition-colors">
+                  隠しボスの倒し方
+                </a>
+              </li>
+            </ol>
+          </div>
+
+          <!-- 広告スペース -->
+          <div class="ad-container">
+            <span class="text-gray-500 text-sm">広告</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-gradient-to-r from-primary-600 to-secondary-600 text-white">
+    <div class="container-content text-center">
+      <h2 class="text-3xl font-display font-bold mb-4">
+        攻略情報を共有しよう！
+      </h2>
+      <p class="text-lg mb-8">
+        コミュニティに参加して、他のプレイヤーと情報交換しましょう
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/community/bbs" class="btn bg-white text-primary-600 hover:bg-gray-100">
+          掲示板に参加
+        </a>
+        <a href="/community/discord" class="btn bg-white/20 text-white hover:bg-white/30 border border-white">
+          Discordサーバー
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

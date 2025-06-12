@@ -1,0 +1,189 @@
+# 装備データベース
+equipment:
+  # 武器 - 剣
+  - id: "sword_beginner"
+    name: "見習いの剣"
+    category: "武器"
+    type: "片手剣"
+    rarity: "common"
+    description: "初心者向けの扱いやすい剣"
+    stats:
+      attack: 10
+      critical_rate: 5
+    requirements:
+      level: 1
+      life: ["王国兵士", "傭兵", "魔法剣士"]
+    acquisition:
+      - method: "初期装備"
+        life: "王国兵士"
+      - method: "ショップ購入"
+        location: "始まりの街"
+        price: 500
+    enhancement:
+      max_level: 5
+      materials_per_level:
+        - item_id: "ore_iron"
+          quantity: 2
+    sell_price: 250
+
+  - id: "sword_flame"
+    name: "炎の剣"
+    category: "武器"
+    type: "片手剣"
+    rarity: "rare"
+    description: "炎の力を宿した魔法剣"
+    stats:
+      attack: 45
+      magic_attack: 20
+      critical_rate: 10
+    element: "火"
+    special_effect: "攻撃時10%の確率で炎上付与"
+    requirements:
+      level: 25
+      life: ["魔法剣士"]
+    acquisition:
+      - method: "製作"
+        life: "鍛冶師"
+        level: 20
+        materials:
+          - item_id: "ore_mithril"
+            quantity: 5
+          - item_id: "flame_crystal"
+            quantity: 3
+          - item_id: "dragon_scale"
+            quantity: 1
+    enhancement:
+      max_level: 10
+      materials_per_level:
+        - item_id: "flame_crystal"
+          quantity: 1
+    sell_price: 5000
+
+  # 防具 - 鎧
+  - id: "armor_leather"
+    name: "革の鎧"
+    category: "防具"
+    type: "軽装鎧"
+    rarity: "common"
+    description: "動きやすい革製の鎧"
+    stats:
+      defense: 15
+      magic_defense: 5
+      evasion: 10
+    requirements:
+      level: 5
+    acquisition:
+      - method: "ショップ購入"
+        location: "各街の防具屋"
+        price: 800
+      - method: "製作"
+        life: "裁縫師"
+        level: 5
+        materials:
+          - item_id: "leather_normal"
+            quantity: 3
+          - item_id: "thread_cotton"
+            quantity: 2
+    set_bonus:
+      2_pieces: "回避率+5%"
+      4_pieces: "移動速度+10%"
+    sell_price: 400
+
+  - id: "armor_mythril"
+    name: "ミスリルプレート"
+    category: "防具"
+    type: "重装鎧"
+    rarity: "epic"
+    description: "ミスリル製の軽くて頑丈な鎧"
+    stats:
+      defense: 80
+      magic_defense: 60
+      hp_bonus: 200
+    requirements:
+      level: 45
+      life: ["王国兵士", "聖騎士"]
+    acquisition:
+      - method: "ボスドロップ"
+        source: "ミスリルゴーレム"
+        rate: "15%"
+      - method: "製作"
+        life: "鍛冶師"
+        level: 40
+        materials:
+          - item_id: "ore_mithril"
+            quantity: 10
+          - item_id: "magic_thread"
+            quantity: 5
+          - item_id: "ancient_blueprint"
+            quantity: 1
+    set_bonus:
+      2_pieces: "物理防御+10%"
+      4_pieces: "被ダメージ-15%"
+    sell_price: 15000
+
+  # アクセサリー
+  - id: "ring_strength"
+    name: "力の指輪"
+    category: "アクセサリー"
+    type: "指輪"
+    rarity: "uncommon"
+    description: "装備者の力を高める指輪"
+    stats:
+      attack: 5
+      strength: 10
+    requirements:
+      level: 10
+    acquisition:
+      - method: "宝箱"
+        location: "力の試練・クリア報酬"
+      - method: "製作"
+        life: "宝石職人"
+        level: 15
+        materials:
+          - item_id: "gem_ruby"
+            quantity: 1
+          - item_id: "gold_ingot"
+            quantity: 2
+    sell_price: 2000
+
+# 装備カテゴリー
+categories:
+  - id: "武器"
+    types: ["片手剣", "両手剣", "短剣", "槍", "弓", "杖", "ハンマー"]
+  - id: "防具"
+    types: ["軽装鎧", "重装鎧", "ローブ", "兜", "手袋", "靴", "盾"]
+  - id: "アクセサリー"
+    types: ["指輪", "首飾り", "耳飾り", "腕輪"]
+
+# セット装備
+set_equipment:
+  - id: "set_beginner"
+    name: "見習いセット"
+    pieces:
+      - "sword_beginner"
+      - "armor_leather"
+      - "helm_leather"
+      - "gloves_leather"
+      - "boots_leather"
+    set_bonus:
+      2_pieces: "HP+50"
+      3_pieces: "全ステータス+3"
+      5_pieces: "経験値獲得量+20%"
+
+# 強化システム
+enhancement_system:
+  success_rates:
+    1: 100
+    2: 100
+    3: 100
+    4: 90
+    5: 80
+    6: 70
+    7: 60
+    8: 50
+    9: 40
+    10: 30
+  failure_penalty:
+    1_to_5: "なし"
+    6_to_7: "強化値-1"
+    8_to_10: "装備破壊の可能性"
