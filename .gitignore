@@ -41,3 +41,6 @@ backup/
 
 # YoYo AI version control directory
 .yoyo/
+
+# Local Netlify folder
+.netlify

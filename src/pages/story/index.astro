@@ -1,0 +1,83 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// ストーリー記事を取得
+const storyEntries = await getCollection('story');
+const sortedEntries = storyEntries.sort((a, b) => 
+  (a.data.chapter || 0) - (b.data.chapter || 0)
+);
+---
+
+<BaseLayout
+  title="ストーリー攻略 - ファンタジーライフi 攻略Wiki"
+  description="ファンタジーライフiのメインストーリー完全攻略。各章の詳細な攻略手順とボス戦攻略法。"
+  keywords={['ストーリー', '攻略', 'メインクエスト', 'ボス攻略']}
+>
+  <!-- ヘッダー -->
+  <section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-12">
+    <div class="container-content">
+      <h1 class="text-4xl font-display font-bold mb-4">ストーリー攻略</h1>
+      <p class="text-xl">グルグルの竜と時をぬすむ少女 - 完全攻略ガイド</p>
+    </div>
+  </section>
+
+  <!-- 攻略記事一覧 -->
+  <section class="py-12">
+    <div class="container-content">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedEntries.map((entry) => (
+          <article class="card group hover:shadow-xl transition-shadow">
+            <a href={`/story/${entry.slug}`}>
+              <div class="mb-4">
+                <span class="tag tag-primary text-sm">
+                  第{entry.data.chapter}章
+                </span>
+              </div>
+              
+              <h2 class="text-xl font-bold mb-2 group-hover:text-primary-600 transition-colors">
+                {entry.data.title}
+              </h2>
+              
+              <p class="text-text-secondary dark:text-text-secondary-dark mb-4">
+                {entry.data.description}
+              </p>
+              
+              <div class="flex items-center justify-between text-sm">
+                {entry.data.estimatedTime && (
+                  <span class="text-text-secondary dark:text-text-secondary-dark">
+                    推定時間: {entry.data.estimatedTime}
+                  </span>
+                )}
+                
+                {entry.data.difficulty && (
+                  <span class={`
+                    px-2 py-1 rounded text-xs
+                    ${entry.data.difficulty === 'beginner' ? 'bg-green-100 text-green-800' : ''}
+                    ${entry.data.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800' : ''}
+                    ${entry.data.difficulty === 'advanced' ? 'bg-red-100 text-red-800' : ''}
+                  `}>
+                    {entry.data.difficulty === 'beginner' && '初級'}
+                    {entry.data.difficulty === 'intermediate' && '中級'}
+                    {entry.data.difficulty === 'advanced' && '上級'}
+                  </span>
+                )}
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <!-- 攻略のヒント -->
+      <div class="mt-12 card bg-primary-50 dark:bg-primary-950">
+        <h2 class="text-xl font-bold mb-4">ストーリー攻略のポイント</h2>
+        <ul class="space-y-2 list-disc list-inside text-text-secondary dark:text-text-secondary-dark">
+          <li>各章クリア後に新しいライフが解放されます</li>
+          <li>推奨レベルを大幅に超えていれば、高難易度でもクリア可能</li>
+          <li>ボス戦前には必ず準備を整えましょう</li>
+          <li>サブクエストをこなすことで、有利にストーリーを進められます</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

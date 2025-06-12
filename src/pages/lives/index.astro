@@ -1,0 +1,124 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import ImagePlaceholder from '@/components/ImagePlaceholder.astro';
+
+// ライフ記事を取得
+const livesEntries = await getCollection('lives');
+
+// カテゴリー別に分類
+const livesByCategory = {
+  combat: livesEntries.filter(entry => entry.data.category === 'combat'),
+  gathering: livesEntries.filter(entry => entry.data.category === 'gathering'),
+  crafting: livesEntries.filter(entry => entry.data.category === 'crafting'),
+};
+
+const categoryInfo = {
+  combat: { name: '戦闘系', icon: '⚔️', color: 'red' },
+  gathering: { name: '採取系', icon: '🌿', color: 'green' },
+  crafting: { name: '製作系', icon: '🔨', color: 'blue' },
+};
+---
+
+<BaseLayout
+  title="ライフ一覧 - ファンタジーライフi グルグルの竜と時をぬすむ少女 攻略Wiki"
+  description="全15種類のライフ（職業）の特徴と攻略法。戦闘系、採取系、製作系それぞれの極め方を解説。"
+  keywords={['ライフ', '職業', '戦闘系', '採取系', '製作系']}
+>
+  <!-- ヘッダー -->
+  <section class="bg-gradient-to-r from-secondary-600 to-accent-600 text-white py-12">
+    <div class="container-content">
+      <h1 class="text-4xl font-display font-bold mb-4">ライフ攻略</h1>
+      <p class="text-xl">15種類の職業を極めて、ファンタジーライフを満喫しよう！</p>
+    </div>
+  </section>
+
+  <!-- ライフ一覧 -->
+  <section class="py-12">
+    <div class="container-content">
+      {Object.entries(livesByCategory).map(([category, lives]) => (
+        <div class="mb-12">
+          <h2 class="text-2xl font-display font-bold mb-6 flex items-center">
+            <span class="text-3xl mr-2">{categoryInfo[category].icon}</span>
+            {categoryInfo[category].name}ライフ
+          </h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {lives.map((entry) => (
+              <article class="card group hover:shadow-xl transition-all">
+                <a href={`/lives/${entry.slug}`}>
+                  <div class="flex items-center mb-4">
+                    <span class="text-4xl mr-3">{entry.data.icon}</span>
+                    <div>
+                      <h3 class="text-xl font-bold group-hover:text-primary-600 transition-colors">
+                        {entry.data.name}
+                      </h3>
+                      <div class="flex items-center text-sm text-text-secondary dark:text-text-secondary-dark">
+                        難易度: 
+                        {[...Array(5)].map((_, i) => (
+                          <span class={i < entry.data.difficulty ? 'text-yellow-500' : 'text-gray-300'}>
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p class="text-text-secondary dark:text-text-secondary-dark mb-4">
+                    {entry.data.description}
+                  </p>
+                  
+                  {entry.data.skills && (
+                    <div class="mb-4">
+                      <h4 class="text-sm font-bold mb-2">主要スキル:</h4>
+                      <div class="flex flex-wrap gap-1">
+                        {entry.data.skills.slice(0, 3).map((skill) => (
+                          <span class="tag tag-secondary text-xs">
+                            {skill.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div class="text-sm text-primary-600 font-medium">
+                    詳細を見る →
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <!-- ライフシステムの説明 -->
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card">
+          <h3 class="text-xl font-bold mb-4">ライフシステムとは？</h3>
+          <p class="text-text-secondary dark:text-text-secondary-dark mb-4">
+            ファンタジーライフiでは、15種類の職業（ライフ）を自由に切り替えながら冒険できます。
+            各ライフには固有のスキルやクエストがあり、極めることで強力な装備や称号を獲得できます。
+          </p>
+          <ul class="list-disc list-inside space-y-1 text-sm text-text-secondary dark:text-text-secondary-dark">
+            <li>いつでも自由にライフチェンジ可能</li>
+            <li>複数のライフを組み合わせて効率的にプレイ</li>
+            <li>全ライフマスターで特別な報酬</li>
+          </ul>
+        </div>
+        
+        <div class="card">
+          <h3 class="text-xl font-bold mb-4">効率的な育成順序</h3>
+          <ol class="list-decimal list-inside space-y-2 text-text-secondary dark:text-text-secondary-dark">
+            <li><strong>採取系</strong>から始める（素材集め）</li>
+            <li><strong>製作系</strong>で装備を作成</li>
+            <li><strong>戦闘系</strong>で強敵に挑む</li>
+            <li>全ライフをバランスよく育成</li>
+          </ol>
+          <p class="mt-4 text-sm text-primary-600">
+            💡 ヒント: 採取と製作を先に進めると、戦闘が楽になります！
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

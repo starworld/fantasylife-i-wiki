@@ -22,7 +22,7 @@ const livesCollection = defineCollection({
   type: 'content',
   schema: z.object({
     name: z.string(),
-    category: z.enum(['combat', 'crafting', 'gathering']),
+    category: z.enum(['combat', 'gathering', 'crafting']),
     title: z.string(),
     description: z.string(),
     icon: z.string().optional(),

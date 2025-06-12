@@ -1,0 +1,113 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// ニュース記事を取得
+const newsEntries = await getCollection('news');
+const sortedNews = newsEntries.sort((a, b) => 
+  b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+// カテゴリー別に色を定義
+const categoryColors = {
+  'アップデート': 'primary',
+  'イベント': 'secondary',
+  'メンテナンス': 'accent',
+  'お知らせ': 'primary',
+};
+---
+
+<BaseLayout
+  title="ニュース - ファンタジーライフi 攻略Wiki"
+  description="ファンタジーライフiの最新情報、アップデート、イベント情報をお届け。"
+  keywords={['ニュース', 'アップデート', 'イベント', 'お知らせ']}
+>
+  <!-- ヘッダー -->
+  <section class="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-12">
+    <div class="container-content">
+      <h1 class="text-4xl font-display font-bold mb-4">ニュース</h1>
+      <p class="text-xl">最新のアップデート情報やイベント情報をチェック！</p>
+    </div>
+  </section>
+
+  <!-- ニュース一覧 -->
+  <section class="py-12">
+    <div class="container-content">
+      <div class="space-y-6">
+        {sortedNews.map((entry) => (
+          <article class="card hover:shadow-lg transition-shadow">
+            <a href={`/news/${entry.slug}`} class="block">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class={`tag tag-${categoryColors[entry.data.category] || 'primary'} text-sm mb-2 inline-block`}>
+                    {entry.data.category}
+                  </span>
+                  <h2 class="text-xl font-bold hover:text-primary-600 transition-colors">
+                    {entry.data.title}
+                  </h2>
+                </div>
+                <time class="text-sm text-text-secondary dark:text-text-secondary-dark whitespace-nowrap">
+                  {entry.data.publishDate.toLocaleDateString('ja-JP')}
+                </time>
+              </div>
+              
+              <p class="text-text-secondary dark:text-text-secondary-dark line-clamp-2">
+                {entry.data.description}
+              </p>
+              
+              {entry.data.tags && entry.data.tags.length > 0 && (
+                <div class="mt-3 flex flex-wrap gap-2">
+                  {entry.data.tags.map((tag) => (
+                    <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </a>
+          </article>
+        ))}
+      </div>
+
+      {sortedNews.length === 0 && (
+        <div class="text-center py-12 text-text-secondary dark:text-text-secondary-dark">
+          現在、ニュース記事はありません。
+        </div>
+      )}
+
+      <!-- ページネーション（将来の実装用） -->
+      <div class="mt-8 flex justify-center">
+        <nav class="flex space-x-2">
+          <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg" disabled>
+            前へ
+          </button>
+          <span class="px-4 py-2">1 / 1</span>
+          <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg" disabled>
+            次へ
+          </button>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- ニュースカテゴリー -->
+  <section class="py-8 bg-gray-50 dark:bg-background-dark-secondary">
+    <div class="container-content">
+      <h2 class="text-xl font-bold mb-4">カテゴリー</h2>
+      <div class="flex flex-wrap gap-3">
+        <a href="/news?category=update" class="tag tag-primary">
+          アップデート
+        </a>
+        <a href="/news?category=event" class="tag tag-secondary">
+          イベント
+        </a>
+        <a href="/news?category=maintenance" class="tag tag-accent">
+          メンテナンス
+        </a>
+        <a href="/news?category=notice" class="tag tag-primary">
+          お知らせ
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
